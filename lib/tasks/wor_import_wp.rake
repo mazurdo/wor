@@ -8,14 +8,19 @@ require 'open-uri'
 
 namespace :wor do
   desc "Import from WordPress"
-  task :import_WP => :environment do |t, args|
+  task :import_WP => :environment do
+    (1..3).each do |i|
+      if ARGV[i].blank?
+        puts "Argument is required, example:\nrake wor:import_WP[database,host,username,password]"
+        exit
+      end
+    end
 
-    ActiveRecord::Base.establish_connection({ :adapter => 'mysql2', 
-                                              :database => 'qm_blog3', 
-                                              :host => 'localhost', 
-                                              :username => 'root', 
-                                              :password => "" })
-
+    ActiveRecord::Base.establish_connection({ :adapter  => 'mysql2', 
+                                              :database => ARGV[1], 
+                                              :host     => ARGV[2], 
+                                              :username => ARGV[3], 
+                                              :password => (ARGV[4] || "")})
 
     posts = ActiveRecord::Base.connection.execute("SELECT ID, post_author, post_content, post_title, post_date, post_status, post_name, guid FROM qmblog_posts WHERE post_type='post' ORDER BY ID desc")
 
@@ -125,8 +130,6 @@ namespace :wor do
         p e.inspect
         p '----------------------------------------------------------------'
       end
-
-      # _post.update_attribute(:date, Time.now) if _post.published?
     end
   end
 end
