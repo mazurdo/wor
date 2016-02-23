@@ -1,0 +1,1 @@
+json.partial! '/wor/api/v1/posts/post', {post: @post}

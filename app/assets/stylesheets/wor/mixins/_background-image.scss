@@ -1,0 +1,10 @@
+@mixin background-image-gradient($image) {
+  background-image: -moz-$image;
+  background-image: -ms-$image;
+  background-image: -webkit-$image;
+  background-image: -o-$image;
+  background-image: $image;
+
+  // background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#bbb), to(#bbb));
+}
+

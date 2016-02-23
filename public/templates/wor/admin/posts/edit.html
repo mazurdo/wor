@@ -1,0 +1,102 @@
+<div class="post-view detail-view animated slideInUp" id="post-view">
+  <a href="#" ng-click="close()" class="close"><i class="glyphicon glyphicon-remove"></i></a>
+
+  <form class="after" name="lead_form" novalidate>
+
+    <div class="row">
+      <div class="col-md-9">
+        <div class="form-group row">
+          <div class="col-md-12">
+            <input name="title" ng-model="data.post.title" class="form-control"></input>
+          </div>
+          <div class="col-md-12">
+            <div class="container_public_path">{{data.post.public_path}} <a href="#" class="btn btn-default btn-xs" ng-click="set_show_slug(true)">editar slug</a></div>
+            <input name="slug" ng-model="data.post.slug" ng-show="is_show_slug()" class="form-control" placeholder="Slug" style="margin-top:5px;"></input>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-md-12">
+            <textarea ui-tinymce="tinymceOptions" ng-model="data.post.content"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="post-sidebar">
+          <div class="post-container-actions clearfix">
+            <input type="button" class="btn btn-default btn-block" ng-click="preview()" value="Previsualizar"/>
+            <input type="button" class="btn btn-default btn-block" ng-click="save('')" value="Guardar"/>
+
+            <a href="#" class="delete-link" ng-click="delete()">Eliminar</a>
+            <a href="#" class="cancel-link" ng-click="close()">Cancelar</a>
+          </div>
+
+
+          <div class="post-container-other-data">
+            <label for="publication_date">Fecha publicación</label>
+
+            <div class="clearfix">
+              <input type="text" class="input-date form-control publication-date" name="publication_date" placeholder="yyyy-mm-dd" ng-model="data.post.publication_date_formated" ng-disabled="is_published()" />
+
+              <input type="text" class="form-control publication-hour" name="publication_date" placeholder="HH:MM" ng-model="data.post.publication_hour_formated" ng-disabled="is_published()" />
+            </div>
+
+            <input type="button" class="btn btn-success btn-block" ng-click="save('published')" value="Publicar inmediatamente" ng-show="!is_published()"/>
+            <input type="button" class="btn btn-danger btn-block" ng-click="save('draft')" value="Despublicar" ng-show="data.post.status=='published'"/>
+
+            <div class="updated-label">Actualizado el {{data.post.updated_at | date:'yyyy-MM-dd HH:mm'}}</div>
+            <div class="clearfix">
+              <a ui-sref="posts.detail.versions" class="btn btn-default btn-sm"><i class="glyphicon glyphicon-time"></i>&nbsp;&nbsp;Historial de revisiones</a>
+            </div>
+          </div>
+
+          <div class="post-container-other-data">
+            <label for="name">Autor</label>
+
+            <ui-select ng-model="data.post.user_id" theme="bootstrap">
+              <ui-select-match allow-clear="true" placeholder="Autor">{{$select.selected.email}}</ui-select-match>
+              <ui-select-choices repeat="user.id as user in data.users | filter: $select.search">
+                <div ng-bind-html="user.email | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="post-container-other-data">
+            <label for="name">Categoría</label>
+            <ui-select ng-model="data.post.category_id" theme="bootstrap">
+              <ui-select-match allow-clear="true" placeholder="Categoría">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="category.id as category in data.categories | filter: $select.search">
+                <div ng-bind-html="category.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+
+            <label for="name">Tags</label>
+            <ui-select multiple tagging="tagTransform" ng-model="data.post.tags" theme="bootstrap" close-on-select="false" title="Tags">
+              <ui-select-match placeholder="Tags">{{$item.name}}</ui-select-match>
+              <ui-select-choices repeat="tag.id as tag in data.tags | filter:$select.search">
+                {{tag.name}}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+          <div class="post-sidebar">
+            <a class="cover-image-select" ngf-select ngf-change="upload($file)">
+              <img ng-src="{{data.cover_image_url}}" class="cover-image" />
+              <span class="cover-image-text">Actualizar carátula</span>
+            </a>
+
+            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+            <div class="progress" ng-show="data.is_upload_file">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{data.progress_upload_file}}" aria-valuemin="0" aria-valuemax="100" style="width: {{data.progress_upload_file}}%;">
+                {{data.progress_upload_file}}%
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<div ui-view></div>

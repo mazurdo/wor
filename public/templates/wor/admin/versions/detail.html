@@ -1,0 +1,13 @@
+<div class="version-view detail-view animated bounceInRight" id="version-view">
+  <a href="#" ng-click="close()" class="close"><i class="glyphicon glyphicon-remove"></i></a>
+
+Detalle versión
+
+  <table class="version">
+    <tr ng-repeat="change in data.version['changeset']">
+      <td ng-bind-html="change[0]"></td>
+      <td><rich-text-diff left="change[0]" right="change[1]"></rich-text-diff></td>
+    </tr>
+  </table>
+
+</div>

@@ -1,0 +1,7 @@
+json.header do 
+  json.code       @code
+  json.messages   @messages
+  json.pagination @pagination
+end
+
+json.data JSON.parse(yield)

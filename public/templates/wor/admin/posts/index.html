@@ -1,0 +1,77 @@
+<div class="main-title">
+  <div class="row">
+    <div class="col-md-7">
+      {{data.pagination.total_items}} Posts
+    </div>
+    <a href="#" ng-click="create()" class="btn btn-primary btn-xs pull-right">Nuevo</a>
+  </div>
+</div>
+
+<div class="row master-detail">
+  <div class="col-xs-12">
+    <table class="table table-hover table-interactive" interactive-table>
+      <thead class="inputs-in-th">
+        <tr>
+          <th>
+            <ui-select ng-model="filter.status" theme="select2" ng-change="update_table()">
+              <ui-select-match allow-clear="true" placeholder="Estado">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="status.id as status in data.statuses | filter: $select.search">
+                <div ng-bind-html="status.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </th>
+          <th><input type="text" placeholder="Título" ng-model="filter.title" ng-change="update_table()" /></th>
+          <th>
+            <ui-select ng-model="filter.user_id" theme="select2" ng-change="update_table()">
+              <ui-select-match allow-clear="true" placeholder="Autor">{{$select.selected.email}}</ui-select-match>
+              <ui-select-choices repeat="user.id as user in data.users | filter: $select.search">
+                <div ng-bind-html="user.email | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </th>
+          <th>
+            <ui-select ng-model="filter.category_id" theme="select2" ng-change="update_table()">
+              <ui-select-match allow-clear="true" placeholder="Categorías">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="category.id as category in data.categories | filter: $select.search">
+                <div ng-bind-html="category.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </th>
+          <th>
+            <ui-select ng-model="filter.tag_id" theme="select2" ng-change="update_table()">
+              <ui-select-match allow-clear="true" placeholder="Etiquetas">{{$select.selected.name}}</ui-select-match>
+              <ui-select-choices repeat="tag.id as tag in data.tags | filter: $select.search">
+                <div ng-bind-html="tag.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+          </th>
+          <th style="width:100px;">
+            <div class="input-daterange input-group" id="datepicker">
+              <input type="text" class="input-sm form-control" name="start" placeholder="Inicio" ng-model="filter.date_begin" ng-change="update_table()" />
+              <span class="input-group-addon">></span>
+              <input type="text" class="input-sm form-control" name="end" placeholder="Fin" ng-model="filter.date_end" ng-change="update_table()" />
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-click="open_detail(post)"  ng-repeat="post in data.posts" ng-class="{'selected': post.id==data.post.id}">
+          <td>{{post.status}}</td>
+          <td>{{post.title}}</td>
+          <td>{{post.user.email}}</td>
+          <td><span ng-repeat="classifier in post.classifiers | filter: { classifier_type: 'category' }">{{classifier.name}}, </span></td>
+          <td><span ng-repeat="classifier in post.classifiers | filter: { classifier_type: 'tag' }">{{classifier.name}}, </span></td>
+          <td>{{post.created_at}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="text-center">
+      <uib-pagination boundary-links="true" rotate="true" max-size="7" force-ellipses="true" total-items="data.pagination.total_items" ng-model="data.pagination.current_page" ng-change="page_changed()"></uib-pagination>
+
+      <pagination boundary-links="true" ng-change="page_changed()" total-items="data.pagination.total_items" ng-model="data.pagination.current_page" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" max-size="10" items-per-page="data.pagination.per_page"></pagination>
+    </div>
+  </div>
+
+  <div ui-view></div>
+</div>

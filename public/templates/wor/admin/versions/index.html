@@ -1,0 +1,15 @@
+<div class="version-view detail-view animated bounceInRight" id="versions-view">
+  <a href="#" ng-click="close()" class="close"><i class="glyphicon glyphicon-remove"></i></a>
+
+  <h2>Índice de versiones</h2>
+
+  <table class="table table-hover table-interactive" interactive-table>
+    <tr ng-repeat="version in data.versions" ng-click="open_detail(version)" ng-class="{'selected': version.id==data.version.id}">
+      <td>{{version.event}}</td>
+      <td>{{version.whodunnit}}</td>
+      <td>{{version.created_at}}</td>
+    </tr>
+  </table>
+</div>
+
+<div ui-view></div>
