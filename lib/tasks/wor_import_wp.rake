@@ -114,7 +114,7 @@ namespace :wor do
             img_extension = img_url.split('.').last
 
             open("#{Wor::Post::PATH_COVER_IMAGE}/#{_post.id}.#{img_extension}", 'wb') do |file|
-              file << open(img_url).read
+              file << open(URI.encode(img_url)).read
             end
 
             if img.parent.name!="body"
