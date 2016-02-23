@@ -16,11 +16,12 @@ namespace :wor do
       end
     end
 
+    puts "connecting to #{ARGV[3]}@#{ARGV[2]}, database: #{ARGV[1]}, password: #{ARGV[4]}"
     ActiveRecord::Base.establish_connection({ :adapter  => 'mysql2', 
                                               :database => ARGV[1], 
                                               :host     => ARGV[2], 
                                               :username => ARGV[3], 
-                                              :password => (ARGV[4] || "")})
+                                              :password => (ARGV[4].nil? ? "" : ARGV[4])})
 
     posts = ActiveRecord::Base.connection.execute("SELECT ID, post_author, post_content, post_title, post_date, post_status, post_name, guid FROM qmblog_posts WHERE post_type='post' ORDER BY ID desc")
 
