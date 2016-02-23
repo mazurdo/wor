@@ -23,7 +23,11 @@ namespace :wor do
                                               :username => ARGV[3], 
                                               :password => (ARGV[4].nil? ? "" : ARGV[4])})
 
-    posts = ActiveRecord::Base.connection.execute("SELECT ID, post_author, post_content, post_title, post_date, post_status, post_name, guid FROM qmblog_posts WHERE post_type='post' ORDER BY ID desc")
+    posts = ActiveRecord::Base.connection.execute("
+      SELECT p.ID, p.post_author, p.post_content, p.post_title, p.post_date, p.post_status, p.post_name, p.guid, u.user_email
+      FROM qmblog_posts p
+      LEFT JOIN qmblog_users u ON u.ID=p.post_author 
+      WHERE post_type='post' ORDER BY ID desc")
 
     post_tags = []
     post_categories = []
@@ -62,7 +66,10 @@ namespace :wor do
       status = Wor::Post::PUBLISHED
       status = Wor::Post::DRAFT if post[5]=='draft' || post[5]=='auto-draft'
 
-      _post = Wor::Post.create({user_id: post[1], 
+      u = User.find_by_email(post[8])
+      user_id = u.nil? ? nil : u.id
+
+      _post = Wor::Post.create({user_id: user_id, 
                                 slug: post[6], 
                                 title: post[3].html_safe, 
                                 content: simple_format(post[2]), 
