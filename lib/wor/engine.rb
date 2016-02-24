@@ -15,6 +15,12 @@ module Wor
                           api_key:      Wor.disqus_api_key,
                           access_token: Wor.disqus_access_token}
     end
+
+    initializer :assets do |config|
+      Rails.application.config.assets.precompile += ["wor/admin/admin.css", "wor/admin/admin.js"]
+      Rails.application.config.assets.precompile += ["wor/elfinder.css", "wor/elfinder.js"]
+      Rails.application.config.assets.paths << root.join("app", "assets", "images")
+    end
   end
 
 
