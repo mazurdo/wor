@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency "pundit"
   s.add_dependency "paper_trail"
   s.add_dependency "disqus_api"
+  s.add_dependency "tinymce-rails"
 
   s.add_development_dependency "sqlite3"
 end

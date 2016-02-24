@@ -10,7 +10,7 @@
 //= require wor/admin/posts/post_edit_ctrl
 //= require wor/admin/versions/versions_index_ctrl
 //= require wor/admin/versions/version_detail_ctrl
-//= require wor/tinymce/tinymce.min
+//= require tinymce
 //= require wor/angular-tinymce/tinymce
 //= require wor/directives/api_messages
 //= require wor/angular-rich-text-diff/google-diff-match-patch
