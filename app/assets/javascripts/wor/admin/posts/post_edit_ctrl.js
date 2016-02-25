@@ -35,10 +35,10 @@
         editor.on("click", function() {});
       },
       inline: false,
-      plugins : 'advlist autolink link image media lists charmap print preview code table',
+      plugins : 'advlist autolink link image media lists charmap print preview code table fullscreen',
       skin: 'lightgray',
       theme : 'modern',
-      toolbar1: 'bold italic strikethrough bullist numlist blockquote| styleselect | alignleft aligncenter alignright alignjustify | outdent indent | link unlink | image media | table | removeformat | preview fullpage | code',
+      toolbar1: 'bold italic strikethrough bullist numlist blockquote| styleselect | alignleft aligncenter alignright alignjustify | outdent indent | link unlink | image media | table | removeformat | preview fullpage | code | fullscreen',
       toolbar2: 'styleselect shorcodes_button read_more',
       menubar: false,
       force_p_newlines : true,
