@@ -36,7 +36,7 @@
       },
       inline: false,
       plugins : 'advlist autolink link image media lists charmap print code table fullscreen',
-      skin: 'lightgray',
+      skin: 'wor',
       theme : 'modern',
       toolbar1: 'bold italic strikethrough bullist numlist blockquote| styleselect | alignleft aligncenter alignright alignjustify | outdent indent | link unlink | image media | table | removeformat | fullpage | code fullscreen',
       toolbar2: 'styleselect shorcodes_button read_more',
