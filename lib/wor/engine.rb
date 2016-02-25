@@ -19,6 +19,8 @@ module Wor
     initializer :assets do |config|
       Rails.application.config.assets.precompile += ["wor/admin/admin.css", "wor/admin/admin.js"]
       Rails.application.config.assets.precompile += ["wor/elfinder.css", "wor/elfinder.js"]
+      Rails.application.config.assets.precompile += ["tinymce/skins/lightgray/content.min.css"]
+
       Rails.application.config.assets.paths << root.join("app", "assets", "images")
     end
   end

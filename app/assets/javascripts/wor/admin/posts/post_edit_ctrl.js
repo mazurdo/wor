@@ -31,19 +31,17 @@
 
     $scope.tinymceOptions = {
       setup: function(editor) {
-          //Focus the editor on load
-          // $timeout(function(){ editor.focus(); });
-          editor.on("init", function() {});
-          editor.on("click", function() {});
+        editor.on("init", function() {});
+        editor.on("click", function() {});
       },
       inline: false,
       plugins : 'advlist autolink link image media lists charmap print preview code table',
       skin: 'lightgray',
       theme : 'modern',
       toolbar1: 'bold italic strikethrough bullist numlist blockquote| styleselect | alignleft aligncenter alignright alignjustify | outdent indent | link unlink | image media | table | removeformat | preview fullpage | code',
-      toolbar2: 'styleselect shorcodes_button',
+      toolbar2: 'styleselect shorcodes_button read_more',
       menubar: false,
-      force_p_newlines : false,
+      force_p_newlines : true,
       force_br_newlines : false,
       convert_newlines_to_brs : false,
       remove_linebreaks : true,   
@@ -68,8 +66,33 @@
             {text: 'Widget modelo', onclick: function() {editor.insertContent('[qm_widget_modelo modelo=SLUGMODELO flotar=derecha]');}},
             {text: 'Enlace grande para ofertas de un modelo', onclick: function() {editor.insertContent('[qm_widget_offerprice_link modelo=SLUGMODELO mensaje_con_precio=no]');}},
             {text: 'Enlace pequeño para ofertas de modelo', onclick: function() {editor.insertContent('[qm_widget_popup_offer_link modelo=SLUGMODELO texto="TEXTO"]');}},
-            {text: 'Widget comparativa', onclick: function() {editor.insertContent('[qm_widget_comparativa_modelos slug1=SLUGMODELO1 slug2=SLUGMODELO2 slug3=SLUGMODELO3 ]');}}
+            {text: 'Widget comparativa', onclick: function() {editor.insertContent('[qm_widget_comparativa_modelos slug1=SLUGMODELO1 slug2=SLUGMODELO2 slug3=SLUGMODELO3 ]');}},
           ]
+        });
+
+        editor.addButton( 'read_more', {
+          text: 'Insertar etiqueta "Leer más"',
+          icon: false,
+          onclick: function() {
+            editor.insertContent('<!--more-->');
+          }
+        });
+
+        editor.on('BeforeSetcontent', function(event){
+          if (event.content) {
+            event.content = event.content.replace(/<!--more(.*?)-->/g, '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="tinymce_more"/>');
+          }
+        });
+
+        editor.on('PostProcess', function(event){
+          if (event.content) {
+            event.content = event.content.replace(/<img[^>]+>/g, function(im) {
+              if (im.indexOf('class="tinymce_more') !== -1) {
+                im = '<!--more-->';
+              }
+              return im;
+            });
+          }
         });
       },
 
