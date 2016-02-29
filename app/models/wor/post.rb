@@ -64,8 +64,55 @@ class Wor::Post < ActiveRecord::Base
     "#{id}.#{cover_image_ext}"
   end
 
-  def cover_image_path
-    "wor/cover_images/#{cover_image_name}" if cover_image?
+  # TODO, Move to module
+  def resize(path, image, size)
+    return false if size.split('x').count!=2
+    return false if !File.exists?(File.join(path))
+
+    Dir.mkdir "#{path}/#{size}" if !File.exists?(File.join(path, size))
+
+    image_original_path = "#{path}/#{image}"
+    image_resized_path  = "#{path}/#{size}/#{image}"
+
+    width  = size.split('x')[0]
+    height = size.split('x')[1]
+
+    i = Magick::Image.read(image_original_path).first
+    i.resize_to_fit(width.to_i,height.to_i).write(image_resized_path)
+
+    true
+  end
+
+  def cover_image_path(size=nil)
+    if size.nil?
+      "wor/cover_images/#{cover_image_name}" if cover_image?
+    elsif File.exists?("#{PATH_COVER_IMAGE}/#{size}/#{cover_image_name}")
+      "wor/cover_images/#{size}/#{cover_image_name}"
+    else
+      "wor/cover_images/#{size}/#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
+    end
+  end
+
+  # TODO Move to module/helper
+  def content_preprocess(size=nil)
+    return content if size.nil?
+
+    doc = Nokogiri.HTML(content)
+
+    if !doc.nil?
+      doc.search('img').each do |img|
+        img_src  = img.attributes['src'].value
+        image_name = img_src.split('/').last
+        image_path = URI.parse(img_src).path.gsub!(image_name, '')
+        img_src.gsub!(image_name, '')
+
+        if resize(File.join(Rails.public_path, image_path), image_name, size)
+          img.attributes['src'].value = "#{img_src}#{size}/#{image_name}"
+        end
+      end
+
+      doc.at("body").inner_html
+    end
   end
 
   def upload_cover_image(file)
