@@ -11,7 +11,7 @@ namespace :wor do
   task :import_WP => :environment do
     (1..3).each do |i|
       if ARGV[i].blank?
-        puts "Argument is required, example:\nrake wor:import_WP[database,host,username,password]"
+        puts "Argument is required, example:\nrake wor:import_WP database host username password"
         exit
       end
     end
@@ -140,5 +140,34 @@ namespace :wor do
       end
     end
   end
+
+  desc "update image paths to post"
+  task :update_image_paths => :environment do
+    old_base_path  = ARGV[1]
+    new_base_path  = ARGV[2]
+
+    (1..2).each do |i|
+      if ARGV[i].blank?
+        puts "Argument is required, example:\nrake wor:change_domain_path old_base_path  new_base_path"
+        exit
+      end
+    end
+
+    Wor::Post.all.each do |post|
+      doc = Nokogiri.HTML(post.content)
+
+      if !doc.nil?
+        doc.search('img').each do |img|
+          img_src  = img.attributes['src'].value
+
+          img_src.gsub!(old_base_path, new_base_path)
+
+          img.attributes['src'].value = img_src
+        end
+        post.update_attributes({content: doc.at("body").inner_html})
+      end
+    end
+  end
+
 end
 
