@@ -84,12 +84,14 @@ class Wor::Post < ActiveRecord::Base
   end
 
   def cover_image_path(size=nil)
-    if size.nil?
-      "wor/cover_images/#{cover_image_name}" if cover_image?
-    elsif File.exists?("#{PATH_COVER_IMAGE}/#{size}/#{cover_image_name}")
-      "wor/cover_images/#{size}/#{cover_image_name}"
-    else
-      "wor/cover_images/#{size}/#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
+    if cover_image?
+      if size.nil?
+        "wor/cover_images/#{cover_image_name}"
+      elsif File.exists?("#{PATH_COVER_IMAGE}/#{size}/#{cover_image_name}")
+        "wor/cover_images/#{size}/#{cover_image_name}"
+      else
+        "wor/cover_images/#{size}/#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
+      end
     end
   end
 
