@@ -3,7 +3,7 @@ class Wor::CategoriesController < Wor::BaseController
   def show
     @category = Wor::Classifier.categories.find_by_slug(params[:slug])
 
-    @posts = @category.posts.published
+    @posts = @category.posts.published.order("publication_date desc")
 
     @pagination = Wor::Pagination.new({current_page: params[:page], total_items: @posts.count})
     @posts      = @posts.paginate(page: @pagination.current_page, per_page: 20)
