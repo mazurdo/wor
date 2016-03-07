@@ -6,7 +6,7 @@ xml.urlset('xmlns'=>'http://www.sitemaps.org/schemas/sitemap/0.9',
 
   @categories.all.each do |category|
     xml.url do
-      xml.loc wor_engine.url_for(:host => request.host, controller: 'wor/categories', action: 'show', slug: category.slug)
+      xml.loc "#{request.protocol}#{request.host}#{category_path(category)}"
       xml.lastmod category.updated_at.strftime( "%Y-%m-%dT%H:%M:%S%:z" )
       xml.changefreq "monthly"
       xml.priority "0.8"

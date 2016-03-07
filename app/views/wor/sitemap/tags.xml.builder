@@ -6,7 +6,7 @@ xml.urlset('xmlns'=>'http://www.sitemaps.org/schemas/sitemap/0.9',
 
   @tags.all.each do |tag|
     xml.url do
-      xml.loc wor_engine.url_for(:host => request.host, controller: 'wor/tags', action: 'show', slug: tag.slug)
+      xml.loc "#{request.protocol}#{request.host}#{tag_path(tag)}"
       xml.lastmod tag.updated_at.strftime( "%Y-%m-%dT%H:%M:%S%:z" )
       xml.changefreq "monthly"
       xml.priority "0.8"
