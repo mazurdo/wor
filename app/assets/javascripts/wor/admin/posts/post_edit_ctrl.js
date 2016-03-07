@@ -48,7 +48,7 @@
       forced_root_block : false,
       relative_urls: false,
       remove_script_host: false,
-      height: 500,
+      height: 600,
       style_formats: [
         { title: 'h1', block: 'h1' },
         { title: 'h2', block: 'h2' },
