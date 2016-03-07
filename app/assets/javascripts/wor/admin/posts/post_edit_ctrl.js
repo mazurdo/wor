@@ -171,7 +171,7 @@
         $scope.data.is_upload_file = true;
 
         Upload.upload({
-          url: 'http://localhost:3000/wor/api/v1/posts/'+$scope.data.post.id+'/upload_cover_image.json',
+          url: 'http://www.quecochemecompro.com/wor/api/v1/posts/'+$scope.data.post.id+'/upload_cover_image.json',
           fields: $scope.data.post,
           file: file
 
