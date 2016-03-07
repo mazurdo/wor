@@ -1,5 +1,5 @@
 class Wor::Post < ActiveRecord::Base
-  attr_accessible :user_id, :slug, :title, :content, :publication_date, :status, :post_type, :cover_image_ext, :permalink, :disqus_identifier
+  attr_accessible :user_id, :slug, :title, :content, :date, :publication_date, :status, :post_type, :cover_image_ext, :permalink, :disqus_identifier
 
   self.table_name = :wor_posts
 
@@ -20,7 +20,7 @@ class Wor::Post < ActiveRecord::Base
   after_update :after_update
   before_destroy :before_destroy
 
-  scope :published, conditions: ["status=? and publication_date<=?", Wor::Post::PUBLISHED, Time.now]
+  scope :published, lambda { where(["status=? and publication_date<=?", Wor::Post::PUBLISHED, Time.now]) }
 
   validates_presence_of  :user_id
   validates_presence_of  :title, :if => :published?
@@ -97,7 +97,7 @@ class Wor::Post < ActiveRecord::Base
 
   # TODO Move to module/helper
   def content_preprocess(size=nil)
-    return content if size.nil?
+    return content if size.nil? || content.blank?
 
     doc = Nokogiri.HTML(content)
 

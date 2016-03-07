@@ -24,7 +24,7 @@ namespace :wor do
                                               :password => (ARGV[4].nil? ? "" : ARGV[4])})
 
     posts = ActiveRecord::Base.connection.execute("
-      SELECT p.ID, p.post_author, p.post_content, p.post_title, p.post_date, p.post_status, p.post_name, p.guid, u.user_email
+      SELECT p.ID, p.post_author, p.post_content, p.post_title, p.post_date, p.post_status, p.post_name, p.guid, u.user_email, p.post_modified 
       FROM qmblog_posts p
       LEFT JOIN qmblog_users u ON u.ID=p.post_author 
       WHERE post_type='post' ORDER BY ID desc")
@@ -73,10 +73,14 @@ namespace :wor do
                                 slug: post[6], 
                                 title: post[3].html_safe, 
                                 content: simple_format(post[2]), 
-                                publication_date: post[4], 
+                                date: post[4], 
                                 status: status, 
                                 post_type: 'post',
                                 disqus_identifier: "#{post[0]} #{post[7]}"})
+
+      if _post.published?
+        _post.update_attributes({publication_date: _post.date})
+      end
 
       if !post_categories[index].blank?
         _post.add_classifier(post_categories[index][0] , 'category')

@@ -63,6 +63,14 @@
       $scope.filter_table();
     });
 
+    $scope.post_date = function(post) {
+      if (moment().diff(moment(post.date), 'days')<1) {
+        return moment(post.date).fromNow();
+      } else {
+        return moment(post.date).format('DD/MM/YYYY');
+      }
+    }
+
 
     $(document).ready(function(){
       $('.input-daterange').datepicker({

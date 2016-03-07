@@ -3,6 +3,7 @@ json.user_id    post.user_id
 json.slug       post.slug
 json.title      post.title
 json.content    post.content
+json.date       post.date
 json.publication_date       post.publication_date
 json.status     post.status
 json.post_type  post.post_type

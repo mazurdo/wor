@@ -4,6 +4,7 @@
 //= require wor/ng-file-upload/ng-file-upload
 
 //= require_self
+//= require wor/moment
 //= require wor/shared_services
 //= require wor/factories
 //= require wor/admin/posts/posts_index_ctrl
@@ -38,6 +39,9 @@ var wor = angular.module('wor',
 .constant('_', window._)
 .run(['$rootScope', function($rootScope) {
   // $rootScope.I18n = window.I18n;
+
+  moment.locale("es");
+
 }]);
 
 wor.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function($locationProvider, $stateProvider, $urlRouterProvider) {

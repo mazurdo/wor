@@ -61,15 +61,17 @@
           <td>{{post.user.email}}</td>
           <td><span ng-repeat="classifier in post.classifiers | filter: { classifier_type: 'category' }">{{classifier.name}}, </span></td>
           <td><span ng-repeat="classifier in post.classifiers | filter: { classifier_type: 'tag' }">{{classifier.name}}, </span></td>
-          <td>{{post.created_at}}</td>
+          <td>
+            <i ng-show="post.status=='draft'">Última actualización</i>
+            <i ng-show="post.status=='published'">Publicado</i>
+            {{post_date(post)}}
+          </td>
         </tr>
       </tbody>
     </table>
 
     <div class="text-center">
-      <uib-pagination boundary-links="true" rotate="true" max-size="7" force-ellipses="true" total-items="data.pagination.total_items" ng-model="data.pagination.current_page" ng-change="page_changed()"></uib-pagination>
-
-      <pagination boundary-links="true" ng-change="page_changed()" total-items="data.pagination.total_items" ng-model="data.pagination.current_page" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" max-size="10" items-per-page="data.pagination.per_page"></pagination>
+      <uib-pagination boundary-links="true" rotate="true" max-size="7" force-ellipses="true" total-items="data.pagination.total_items" ng-model="data.pagination.current_page" ng-change="page_changed()" items-per-page="data.pagination.per_page"></uib-pagination>
     </div>
   </div>
 

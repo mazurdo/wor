@@ -4,8 +4,8 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     @posts = @posts.where("title like ?", "%#{params[:title]}%")  if !params[:title].blank?
     @posts = @posts.where("user_id=?", params[:user_id])          if !params[:user_id].blank?
     @posts = @posts.where("status=?",  params[:status])           if !params[:status].blank?
-    @posts = @posts.where("created_at >= ?", params[:date_begin]) if !params[:date_begin].blank?
-    @posts = @posts.where("created_at <= ?", params[:date_end])   if !params[:date_end].blank?
+    @posts = @posts.where("date >= ?", params[:date_begin]) if !params[:date_begin].blank?
+    @posts = @posts.where("date <= ?", params[:date_end])   if !params[:date_end].blank?
 
     _classifier_ids = []
     _classifier_ids << params[:category_id] if !params[:category_id].blank?
@@ -15,10 +15,10 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
       @posts = @posts.joins(:classifier_posts).where("#{Wor::ClassifierPost.table_name}.classifier_id IN (?)", _classifier_ids)
     end
 
-    @posts = @posts.order("created_at desc")
+    @posts = @posts.order("date desc, created_at desc")
 
     @pagination = Wor::Pagination.new({current_page: params[:page], total_items: @posts.count})
-    @posts      = @posts.paginate(page: @pagination.current_page, per_page: 10)
+    @posts      = @posts.paginate(page: @pagination.current_page, per_page: 20)
     @pagination.total_pages           = @posts.total_pages
     @pagination.total_current_items   = @posts.size
     @pagination.per_page              = @posts.per_page
@@ -49,6 +49,10 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
       @post.update_attributes({status: params[:status]})
     end
 
+    if @post.publication_date.blank?
+      attrs_to_update[:date] = Time.now
+    end
+
     @post.update_attributes(attrs_to_update)
 
     Wor::ClassifierPost.where("post_id=?", @post.id).destroy_all
@@ -75,7 +79,8 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
   def create
     @post = Wor::Post.create({title: params[:title], 
                               content: params[:content], 
-                              user_id: (wor_current_user.nil? ? nil : wor_current_user.id)})
+                              user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
+                              date: Time.now})
 
     render_message({view: :show})
   end
