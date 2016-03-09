@@ -23,6 +23,21 @@
       </div>
       <div class="col-md-3">
         <div class="post-sidebar">
+          <div class="post-sidebar">
+            <a class="cover-image-select" ngf-select ngf-change="upload($file)">
+              <img ng-src="{{data.cover_image_url}}" class="cover-image" />
+              <span class="cover-image-text">Actualizar carátula</span>
+            </a>
+
+            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+            <div class="progress" ng-show="data.is_upload_file">
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{data.progress_upload_file}}" aria-valuemin="0" aria-valuemax="100" style="width: {{data.progress_upload_file}}%;">
+                {{data.progress_upload_file}}%
+              </div>
+            </div>
+          </div>
+
           <div class="post-container-actions clearfix">
             <input type="button" class="btn btn-default btn-block" ng-click="preview()" value="Previsualizar"/>
             <input type="button" class="btn btn-default btn-block" ng-click="save('')" value="Guardar"/>
@@ -76,21 +91,6 @@
                 {{tag.slug}}
               </ui-select-choices>
             </ui-select>
-          </div>
-          <div class="post-sidebar">
-            <a class="cover-image-select" ngf-select ngf-change="upload($file)">
-              <img ng-src="{{data.cover_image_url}}" class="cover-image" />
-              <span class="cover-image-text">Actualizar carátula</span>
-            </a>
-
-            <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-
-            <div class="progress" ng-show="data.is_upload_file">
-              <div class="progress-bar" role="progressbar" aria-valuenow="{{data.progress_upload_file}}" aria-valuemin="0" aria-valuemax="100" style="width: {{data.progress_upload_file}}%;">
-                {{data.progress_upload_file}}%
-              </div>
-            </div>
-
           </div>
         </div>
       </div>
