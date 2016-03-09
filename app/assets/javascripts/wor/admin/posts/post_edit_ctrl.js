@@ -16,8 +16,8 @@
             $scope.data.cover_image_url = $scope.data.post.cover_image_url+'?' + new Date().getTime();
           }
 
-          $scope.data.post.publication_date_formated = $filter('date')($scope.data.post.publication_date, 'yyyy-MM-dd');
-          $scope.data.post.publication_hour_formated = $filter('date')($scope.data.post.publication_date, 'hh:mm');
+          $scope.data.post.publication_date_formated = moment($scope.data.post.publication_date).format('YYYY-MM-DD');
+          $scope.data.post.publication_hour_formated = moment($scope.data.post.publication_date).format('HH:mm');
 
           classifiersFactory.find({classifier_type: 'tag'}).success(function(response){
             $scope.data.tags = response.data;
