@@ -188,17 +188,17 @@ class Wor::Post < ActiveRecord::Base
   end
 
 
-
   private
 
   def after_create
-    self.update_slug(self.title) if self.slug.blank? && !self.title.blank?
+    self.update_slug(self.title)            if self.slug.blank? && !self.title.blank?
     self.update_attributes({status: DRAFT}) if self.status.blank?
   end
 
   def after_update
-    self.update_attributes({status: DRAFT}) if self.status.blank?    
-    self.update_slug(self.title) if self.slug.blank? && !self.title.blank?
+    self.update_attributes({status: DRAFT})              if self.status.blank?    
+    self.update_attributes({publication_date: Time.now}) if self.published? && self.publication_date.blank?
+    self.update_slug(self.title)                         if self.slug.blank? && !self.title.blank?
   end
 
   def before_destroy

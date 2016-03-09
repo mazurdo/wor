@@ -40,7 +40,6 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     attrs_to_update = {title: params[:title], content: params[:content], user_id: params[:user_id], publication_date: params[:publication_date]}
 
     if params[:status]==Wor::Post::PUBLISHED && !@post.published?
-      attrs_to_update[:publication_date]   = Time.now
       attrs_to_update[:disqus_identifier]  = "#{request.base_url}/#{wor_engine.posts_path}?id=#{@post.id}" if @post.disqus_identifier.nil?
       attrs_to_update[:permalink]          = "#{request.base_url}/#{wor_engine.posts_path}?id=#{@post.id}" if @post.permalink.nil?
     end
@@ -59,7 +58,10 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     Wor::ClassifierPost.create({post_id: @post.id, classifier_id: params[:category_id]}) if params[:category_id]
 
     if !params[:tags].nil?
-      params[:tags].each do |tag_id|
+      params[:tags].each do |tag|
+        tag_id = tag
+        tag_id = tag["id"] if tag.is_a?(Hash)
+
         if !Wor::Classifier.exists?(tag_id)
           _tag = Wor::Classifier.create({name: tag_id, classifier_type: :tag})
           tag_id = _tag.id
