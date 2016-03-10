@@ -34,7 +34,7 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
 
   def update
     @post = Wor::Post.find(params[:id])
-
+    post_without_update = @post
     @post.update_slug(params[:slug])
 
     attrs_to_update = {title: params[:title], content: params[:content], user_id: params[:user_id], publication_date: params[:publication_date]}
@@ -76,6 +76,8 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     else
       render_model_error(@post)
     end
+
+    expire_fragment("wor/posts_show_#{!post_without_update.category.nil? ? post_without_update.category.slug : ''}_#{post_without_update.slug}")
   end
 
   def create
@@ -83,6 +85,8 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
                               content: params[:content], 
                               user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
                               date: Time.now})
+
+    expire_action(:controller => '/wor/posts', :action => 'show', :slug => @post.slug)
 
     render_message({view: :show})
   end
