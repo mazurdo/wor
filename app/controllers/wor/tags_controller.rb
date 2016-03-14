@@ -2,6 +2,7 @@ class Wor::TagsController < Wor::BaseController
 
   def show
     @tag = Wor::Classifier.tags.find_by_slug(params[:slug])
+    (render_404;return;) if @tag.nil?
 
     @posts = @tag.posts.published.order("publication_date desc")
 
