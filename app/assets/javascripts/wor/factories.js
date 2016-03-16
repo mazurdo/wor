@@ -40,54 +40,54 @@ angular.module('wor.factories')
 
     };
   }])
-  .factory('postsFactory', ['$http', function ($http){
+  .factory('postsFactory', ['$http', '$rootScope', function ($http, $rootScope){
     var factory = {};
 
     factory.find = function (params) {
-      return $http.get(urlBase + '/wor/api/v1/posts.json', {params: params});
+      return $http.get($rootScope.urlBase + '/wor/api/v1/posts.json', {params: params});
     }
 
     factory.update = function (post) {
-      return $http.put(urlBase + '/wor/api/v1/posts/'+post.id+'.json', post); 
+      return $http.put($rootScope.urlBase + '/wor/api/v1/posts/'+post.id+'.json', post); 
     }
 
     factory.create = function (post) {
-      return $http.post(urlBase + '/wor/api/v1/posts.json', post);
+      return $http.post($rootScope.urlBase + '/wor/api/v1/posts.json', post);
     }
 
     factory.get = function (id) {
-      return $http.get(urlBase + '/wor/api/v1/posts/'+id+'.json');
+      return $http.get($rootScope.urlBase + '/wor/api/v1/posts/'+id+'.json');
     }
 
     factory.delete = function (post_id) {
-      return $http.delete(urlBase + '/wor/api/v1/posts/'+post_id+'.json');
+      return $http.delete($rootScope.urlBase + '/wor/api/v1/posts/'+post_id+'.json');
     }
 
     return factory;    
   }])
-  .factory('classifiersFactory', ['$http', function ($http){
+  .factory('classifiersFactory', ['$http', '$rootScope', function ($http, $rootScope){
     var factory = {};
 
     factory.find = function (params) {
-      return $http.get(urlBase + '/wor/api/v1/classifiers.json', {params: params});
+      return $http.get($rootScope.urlBase + '/wor/api/v1/classifiers.json', {params: params});
     }
 
     return factory;    
   }])
-  .factory('usersFactory', ['$http', function ($http){
+  .factory('usersFactory', ['$http', '$rootScope', function ($http, $rootScope){
     var factory = {};
 
     factory.find = function (params) {
-      return $http.get(urlBase + '/wor/api/v1/users.json', {params: params});
+      return $http.get($rootScope.urlBase + '/wor/api/v1/users.json', {params: params});
     }
 
     return factory;    
   }])
-  .factory('versionsFactory', ['$http', function ($http){
+  .factory('versionsFactory', ['$http', '$rootScope', function ($http, $rootScope){
     var factory = {};
 
     factory.find = function (params) {
-      return $http.get(urlBase + '/wor/api/v1/versions.json', {params: params});
+      return $http.get($rootScope.urlBase + '/wor/api/v1/versions.json', {params: params});
     }
 
     return factory;    
