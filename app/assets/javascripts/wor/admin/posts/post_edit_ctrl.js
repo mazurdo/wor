@@ -173,7 +173,7 @@
         $scope.data.is_upload_file = true;
 
         Upload.upload({
-          url: 'http://www.quecochemecompro.com/wor/api/v1/posts/'+$scope.data.post.id+'/upload_cover_image.json',
+          url: $rootScope.urlBase+'/wor/api/v1/posts/'+$scope.data.post.id+'/upload_cover_image.json',
           fields: $scope.data.post,
           file: file
 
