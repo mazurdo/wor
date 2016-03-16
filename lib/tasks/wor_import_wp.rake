@@ -95,7 +95,7 @@ namespace :wor do
       # Import comments from Disqus
       if _post.published?
         begin
-          response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{_post.disqus_identifier}", forum: 'qucochemecompro')
+          response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{_post.disqus_identifier}", forum: Wor.disqus_forum)
           if response["code"]==0
             response["response"].each do |dcomment|
               Wor::Comment.create({post_id: _post.id, username: dcomment["author"]["name"], message: dcomment["message"], created_at: dcomment["createdAt"], disqus_object: dcomment.to_s})

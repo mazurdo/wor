@@ -36,6 +36,7 @@ module Wor
     mattr_accessor :disqus_api_secret
     mattr_accessor :disqus_api_key
     mattr_accessor :disqus_access_token
+    mattr_accessor :disqus_forum
   end
 
   def self.setup(&block)

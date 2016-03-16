@@ -170,7 +170,7 @@ class Wor::Post < ActiveRecord::Base
 
   def sync_disqus
     begin
-      response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{self.disqus_identifier}", forum: 'qucochemecompro')
+      response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{self.disqus_identifier}", forum: Wor.disqus_forum)
       if response["code"]==0
         response["response"].each do |dcomment|
           if !Wor::Comment.sync?(dcomment["id"].to_i)
