@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class Wor::Post < ActiveRecord::Base
   attr_accessible :user_id, :slug, :title, :content, :date, :publication_date, :status, :post_type, :cover_image_ext, :permalink, :disqus_identifier
 
@@ -69,10 +71,10 @@ class Wor::Post < ActiveRecord::Base
     return false if size.split('x').count!=2
     return false if !File.exists?(File.join(path))
 
-    Dir.mkdir "#{path}/#{size}" if !File.exists?(File.join(path, size))
+    Dir.mkdir "#{path}/#{id}" if !File.exists?(File.join(path, id.to_s))
 
     image_original_path = "#{path}/#{image}"
-    image_resized_path  = "#{path}/#{size}/#{image}"
+    image_resized_path  = "#{path}/#{id}/#{size}_#{image}"
 
     width  = size.split('x')[0]
     height = size.split('x')[1]
@@ -87,10 +89,10 @@ class Wor::Post < ActiveRecord::Base
     if cover_image?
       if size.nil?
         "wor/cover_images/#{cover_image_name}"
-      elsif File.exists?("#{PATH_COVER_IMAGE}/#{size}/#{cover_image_name}")
-        "wor/cover_images/#{size}/#{cover_image_name}"
+      elsif File.exists?("#{PATH_COVER_IMAGE}/#{id}/#{size}_#{cover_image_name}")
+        "wor/cover_images/#{id}/#{size}_#{cover_image_name}"
       else
-        "wor/cover_images/#{size}/#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
+        "wor/cover_images/#{id}/#{size}_#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
       end
     end
   end
@@ -109,7 +111,7 @@ class Wor::Post < ActiveRecord::Base
         img_src.gsub!(image_name, '')
 
         if resize(File.join(Rails.public_path, image_path), image_name, size)
-          img.attributes['src'].value = "#{img_src}#{size}/#{image_name}"
+          img.attributes['src'].value = "#{img_src}#{id}/#{size}_#{image_name}"
         end
       end
 
@@ -130,6 +132,7 @@ class Wor::Post < ActiveRecord::Base
   end
 
   def remove_cover_image
+    FileUtils.rm_rf("#{PATH_COVER_IMAGE}/#{id}")
     File.delete("#{PATH_COVER_IMAGE}/#{cover_image_name}") if cover_image?
   end
 
