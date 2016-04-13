@@ -37,12 +37,15 @@ var wor = angular.module('wor',
     'angular-rich-text-diff'
   ])
 .constant('_', window._)
-.run(['$rootScope', '$location', function($rootScope, $location) {
+.run(['$rootScope', '$location', 'configDataFactory', function($rootScope, $location, configDataFactory) {
   // $rootScope.I18n = window.I18n;
-
   moment.locale("es");
 
   $rootScope.urlBase = $location.protocol()+'://'+$location.host()+':'+$location.port();
+
+  configDataFactory.get().success(function(response){
+    $rootScope.configData = response;
+  });
 }]);
 
 wor.config(['$locationProvider', '$stateProvider', '$urlRouterProvider', function($locationProvider, $stateProvider, $urlRouterProvider) {

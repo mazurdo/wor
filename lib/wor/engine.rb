@@ -37,6 +37,8 @@ module Wor
     mattr_accessor :disqus_api_key
     mattr_accessor :disqus_access_token
     mattr_accessor :disqus_forum
+    mattr_accessor :post_layouts
+    self.post_layouts = [:show]
   end
 
   def self.setup(&block)

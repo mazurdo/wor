@@ -21,6 +21,7 @@ Wor::Engine.routes.draw do
         resources :classifiers
         resources :users, only: [:index]
         resources :versions, only: [:index]
+        resources :config_data, only: [:index]
       end
     end
 

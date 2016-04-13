@@ -92,4 +92,13 @@ angular.module('wor.factories')
 
     return factory;    
   }])
+  .factory('configDataFactory', ['$http', '$rootScope', function ($http, $rootScope){
+    var factory = {};
+
+    factory.get = function (params) {
+      return $http.get($rootScope.urlBase + '/wor/api/v1/config_data.json', {params: params});
+    }
+
+    return factory;    
+  }])
 ;

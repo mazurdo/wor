@@ -75,6 +75,7 @@
               </ui-select-choices>
             </ui-select>
           </div>
+
           <div class="post-container-other-data">
             <label for="name">Categoría</label>
             <ui-select ng-model="data.post.category_id" theme="bootstrap">
@@ -89,6 +90,17 @@
               <ui-select-match placeholder="Tags">{{$item.slug}}</ui-select-match>
               <ui-select-choices repeat="tag.id as tag in data.tags | filter:$select.search">
                 {{tag.slug}}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+
+          <div class="post-container-other-data">
+            <label for="name">Plantilla</label>
+
+            <ui-select ng-model="data.post.layout" theme="bootstrap">
+              <ui-select-match allow-clear="true" placeholder="Plantilla">{{$select.selected}}</ui-select-match>
+              <ui-select-choices repeat="layout in configData.post_layouts">
+                <div ng-bind-html="layout | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
           </div>

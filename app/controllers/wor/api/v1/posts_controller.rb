@@ -34,10 +34,13 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
 
   def update
     @post = Wor::Post.find(params[:id])
-    post_without_update = @post
     @post.update_slug(params[:slug])
 
-    attrs_to_update = {title: params[:title], content: params[:content], user_id: params[:user_id], publication_date: params[:publication_date]}
+    attrs_to_update = { title: params[:title], 
+                        content: params[:content], 
+                        user_id: params[:user_id], 
+                        publication_date: params[:publication_date], 
+                        layout: params[:layout]}
 
     if params[:status]==Wor::Post::PUBLISHED && !@post.published?
       attrs_to_update[:disqus_identifier]  = "#{request.base_url}/#{wor_engine.posts_path}?id=#{@post.id}" if @post.disqus_identifier.nil?
@@ -82,7 +85,8 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     @post = Wor::Post.create({title: params[:title], 
                               content: params[:content], 
                               user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
-                              date: Time.now})
+                              date: Time.now,
+                              layout: Wor.post_layouts[0]})
 
     render_message({view: :show})
   end

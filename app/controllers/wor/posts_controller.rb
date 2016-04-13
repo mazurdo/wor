@@ -13,12 +13,25 @@ class Wor::PostsController < Wor::BaseController
   def show
     @post = Wor::Post.find_by_slug(params[:slug])
     authorize @post
+
+    render_show(@post)
   end
 
   def preview
     @post = Wor::Post.find_by_id(params[:id])
     authorize @post
 
-    render :show
+    render_show(@post)
+  end
+
+
+  private
+
+  def render_show(post)
+    if !post.layout.blank?
+      render post.layout
+    else
+      render :show
+    end
   end
 end

@@ -1,7 +1,7 @@
 require 'fileutils'
 
 class Wor::Post < ActiveRecord::Base
-  attr_accessible :user_id, :slug, :title, :content, :date, :publication_date, :status, :post_type, :cover_image_ext, :permalink, :disqus_identifier
+  attr_accessible :user_id, :slug, :title, :content, :date, :publication_date, :status, :post_type, :layout, :cover_image_ext, :permalink, :disqus_identifier
 
   table_name =    :wor_posts
 
