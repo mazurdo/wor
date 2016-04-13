@@ -116,7 +116,7 @@
               url = url.replace(reg, '/');
             }
 
-            url = urlBase+url;
+            url = $rootScope.urlBase+url;
 
             // Provide file and text for the link dialog
             if (meta.filetype == 'file') {
