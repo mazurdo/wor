@@ -3,29 +3,29 @@ require 'fileutils'
 class Wor::Post < ActiveRecord::Base
   attr_accessible :user_id, :slug, :title, :content, :date, :publication_date, :status, :post_type, :cover_image_ext, :permalink, :disqus_identifier
 
-  self.table_name = :wor_posts
+  table_name =    :wor_posts
 
   has_paper_trail :class_name => 'Wor::Version',
-                  :versions => :versions,
-                  :version  => :version,
-                  :only => [:title, :slug, :content, :publication_date, :user_id, :status]
+                  :versions   => :versions,
+                  :version    => :version,
+                  :only       => [:title, :slug, :content, :publication_date, :user_id, :status]
+
+  has_many        :classifier_posts, dependent: :destroy
+  has_many        :classifiers,      through:   :classifier_posts
+  has_many        :comments
+
+  after_create    :hook_after_create
+  after_update    :hook_after_update
+  before_destroy  :hook_before_destroy
+
+  scope           :published, lambda { where(["status=? and publication_date<=?", Wor::Post::PUBLISHED, Time.now]) }
+
+  validates_presence_of  :user_id
+  validates_presence_of  :title, :if => :published?
 
   PUBLISHED = 'published'
   DRAFT     = 'draft'
   PATH_COVER_IMAGE = File.join(Rails.public_path, "wor", "cover_images")
-
-  has_many :classifier_posts, :dependent => :destroy
-  has_many :classifiers, through: :classifier_posts
-  has_many :comments
-
-  after_create :after_create
-  after_update :after_update
-  before_destroy :before_destroy
-
-  scope :published, lambda { where(["status=? and publication_date<=?", Wor::Post::PUBLISHED, Time.now]) }
-
-  validates_presence_of  :user_id
-  validates_presence_of  :title, :if => :published?
 
 
   def category
@@ -193,18 +193,18 @@ class Wor::Post < ActiveRecord::Base
 
   private
 
-  def after_create
+  def hook_after_create
     self.update_slug(self.title)            if self.slug.blank? && !self.title.blank?
     self.update_attributes({status: DRAFT}) if self.status.blank?
   end
 
-  def after_update
+  def hook_after_update
     self.update_attributes({status: DRAFT})              if self.status.blank?    
     self.update_attributes({publication_date: Time.now}) if self.published? && self.publication_date.blank?
     self.update_slug(self.title)                         if self.slug.blank? && !self.title.blank?
   end
 
-  def before_destroy
+  def hook_before_destroy
     self.remove_cover_image
   end
 end
