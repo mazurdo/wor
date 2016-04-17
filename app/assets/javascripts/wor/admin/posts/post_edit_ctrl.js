@@ -36,20 +36,16 @@
         editor.on("init", function() {});
         editor.on("click", function() {});
       },
-      inline: false,
-      plugins : 'advlist autolink link image media lists charmap print code table fullscreen',
+      plugins : 'advlist autolink link image media lists charmap print code table fullscreen visualblocks',
       skin: 'wor',
       theme : 'modern',
       toolbar1: 'bold italic strikethrough bullist numlist blockquote| styleselect | alignleft aligncenter alignright alignjustify | outdent indent | link unlink | image media | table | removeformat | fullpage | code fullscreen',
       toolbar2: 'styleselect shorcodes_button read_more',
       menubar: false,
-      force_p_newlines : true,
-      force_br_newlines : false,
-      convert_newlines_to_brs : false,
-      remove_linebreaks : true,   
-      forced_root_block : false,
+      visualblocks_default_state: true,
+      end_container_on_empty_block: true,
+      entity_encoding : 'raw',
       relative_urls: false,
-      remove_script_host: false,
       height: 600,
       style_formats: [
         { title: 'h1', block: 'h1' },
@@ -58,7 +54,8 @@
         { title: 'h4', block: 'h4' },
         { title: 'h5', block: 'h5' },
         { title: 'h6', block: 'h6' }
-      ],
+      ]
+      ,
       setup: function(editor) {
         editor.addButton('shorcodes_button', {
           type: 'menubutton',
