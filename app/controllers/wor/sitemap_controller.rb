@@ -26,7 +26,7 @@ class Wor::SitemapController < ApplicationController
 
   def posts
     date = Date.parse(params[:date])
-    @posts = Wor::Post.where("date between ? and ?", date.beginning_of_month, date.end_of_month).order("id desc")
+    @posts = Wor::Post.published.where("date between ? and ?", date.beginning_of_month, date.end_of_month).order("id desc")
 
     respond_to do |format|
       format.xml { render :layout => false }
