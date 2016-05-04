@@ -1,7 +1,7 @@
 class Wor::SitemapController < ApplicationController
 
   def index
-    @posts = Wor::Post.group("MONTH(date), YEAR(date)").order("date asc")
+    @posts = Wor::Post.published.group("MONTH(date), YEAR(date)").order("date asc")
 
     respond_to do |format|
       format.xml { render :layout => false }
