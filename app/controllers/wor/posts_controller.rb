@@ -14,7 +14,10 @@ class Wor::PostsController < Wor::BaseController
     @post = Wor::Post.find_by_slug(params[:slug])
     authorize @post
 
-    render_show(@post)
+    respond_to do |format|
+      format.html { render_show(@post) }
+      format.rss { render :layout => false }
+    end
   end
 
   def preview
