@@ -24,4 +24,31 @@ module Wor::WorTextsHelper
     end
   end
 
+  def intro_text(post)
+    return '' if post.content.blank?
+    more = post.content.index("<!--more-->")
+    return '' if more.nil?
+
+    return post.content[0, more]
+  end
+
+  def convert_to_absolute_paths(content)
+    doc = Nokogiri.HTML(content)
+
+    if !doc.nil?
+      doc.search('img').each do |img|
+        if (!img.attributes['src'].value.include?('http://') && !img.attributes['src'].value.include?('https://'))
+          img.attributes['src'].value = "#{request.protocol}#{request.host}#{img.attributes['src']}"
+        end
+      end
+
+      doc.search('a').each do |link|
+        if (!link.attributes['href'].value.include?('http://') && !link.attributes['href'].value.include?('https://'))
+          link.attributes['href'].value = "#{request.protocol}#{request.host}#{link.attributes['href']}"
+        end
+      end
+
+      doc.at("body").inner_html
+    end
+  end
 end
