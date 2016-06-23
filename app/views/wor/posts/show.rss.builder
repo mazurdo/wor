@@ -35,7 +35,7 @@ xml.rss :version => "2.0",
       end
 
       xml.content :encoded do
-        xml.cdata!("<img src=\"#{request.protocol}#{request.host}/#{@post.cover_image_path('150x150')}\"/>#{convert_to_absolute_paths(@post.content)}")
+        xml.cdata!("<img src=\"#{request.protocol}#{request.host}/#{@post.cover_image_path('1140x600')}\"/>#{convert_to_absolute_paths(@post.content)}")
       end
     end
   end
