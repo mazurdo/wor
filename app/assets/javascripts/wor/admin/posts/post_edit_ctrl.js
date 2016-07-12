@@ -5,8 +5,8 @@
     $scope.data.cover_image_url = '/assets/wor/no-photo-grey.png';
 
     $scope.tagTransform = function (newTag) {
-      return {id: newTag, name: newTag};
-    };
+      return {id: newTag, slug: newTag, name: newTag};
+    }
 
     var load_post = function(post_id) {
       if (post_id) {
