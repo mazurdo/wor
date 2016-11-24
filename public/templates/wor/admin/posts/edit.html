@@ -86,10 +86,10 @@
             </ui-select>
 
             <label for="name">Tags</label>
-            <ui-select multiple tagging="tagTransform" ng-model="data.post.tags" theme="bootstrap" close-on-select="false" title="Tags">
-              <ui-select-match placeholder="Tags">{{$item.slug}}</ui-select-match>
-              <ui-select-choices repeat="tag.id as tag in data.tags | filter:$select.search">
-                {{tag.slug}}
+            <ui-select multiple tagging tagging-label="new tag" ng-model="data.post.tags" theme="bootstrap" title="Tags">
+              <ui-select-match placeholder="Tags">{{$item}}</ui-select-match>
+              <ui-select-choices repeat="tag in data.tags | filter:$select.search">
+                {{tag}}
               </ui-select-choices>
             </ui-select>
           </div>

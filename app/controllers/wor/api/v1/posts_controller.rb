@@ -61,16 +61,15 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     Wor::ClassifierPost.create({post_id: @post.id, classifier_id: params[:category_id]}) if params[:category_id]
 
     if !params[:tags].nil?
-      params[:tags].each do |tag|
-        tag_id = tag
-        tag_id = tag["id"] if tag.is_a?(Hash)
+      params[:tags].each do |tag_name|
+        tag_slug = Wor::Slugs.sanitize(tag_name)
+        tag = Wor::Classifier.find_by_slug(tag_slug)
 
-        if !Wor::Classifier.exists?(tag_id)
-          _tag = Wor::Classifier.create({name: tag_id, classifier_type: :tag})
-          tag_id = _tag.id
+        if !tag
+          tag = Wor::Classifier.create({name: tag_name, classifier_type: :tag})
         end
 
-        Wor::ClassifierPost.create({post_id: @post.id, classifier_id: tag_id})
+        Wor::ClassifierPost.create({post_id: @post.id, classifier_id: tag.id})
       end
     end
 

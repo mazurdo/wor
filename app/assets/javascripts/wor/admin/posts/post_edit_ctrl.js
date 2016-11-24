@@ -4,14 +4,11 @@
     $scope.data = $scope.data || {};
     $scope.data.cover_image_url = '/assets/wor/no-photo-grey.png';
 
-    $scope.tagTransform = function (newTag) {
-      return {id: newTag, slug: newTag, name: newTag};
-    }
-
     var load_post = function(post_id) {
       if (post_id) {
         postsFactory.get(post_id).success(function(response){
           $scope.data.post = response.data;
+
           if ($scope.data.post.cover_image_url!='') {
             $scope.data.cover_image_url = $scope.data.post.cover_image_url+'?' + new Date().getTime();
           }
@@ -22,8 +19,9 @@
           }
 
           classifiersFactory.find({classifier_type: 'tag'}).success(function(response){
-            $scope.data.tags = response.data;
-            $scope.data.post.tags = _.intersectionBy($scope.data.tags, $scope.data.post.classifiers, 'id');
+            $scope.data.post.tags = _.intersectionBy(response.data, $scope.data.post.classifiers, 'id');
+            $scope.data.tags = _.uniq(_.map(response.data, 'name'));
+            $scope.data.post.tags = _.uniq(_.map($scope.data.post.tags, 'name'));
           });
         });
       }
@@ -180,7 +178,8 @@
         }).success(function (response, status, headers, config) {
           $scope.data.progress_upload_file = 100;
           $scope.data.is_upload_file = false;
-          $scope.data.post = response.data;
+          $scope.data.post.cover_image_url = response.data.cover_image_url;
+
           if ($scope.data.post.cover_image_url!='') {
             $scope.data.cover_image_url = $scope.data.post.cover_image_url+'?' + new Date().getTime();
           }
