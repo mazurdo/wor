@@ -83,9 +83,13 @@ class Wor::Post < ActiveRecord::Base
     height = size.split('x')[1]
 
     Rails.logger.warn "Magick::Image.read(#{image_original_path})"
-    i = Magick::Image.read(image_original_path).first
-    Rails.logger.warn "before i.resize_to_fit"
-    i.resize_to_fit(width.to_i,height.to_i).write(image_resized_path)
+    begin
+      i = Magick::Image.read(image_original_path).first
+      Rails.logger.warn "before i.resize_to_fit"
+      i.resize_to_fit(width.to_i,height.to_i).write(image_resized_path)
+    rescue Exception => e
+      Rails.logger.error e
+    end
 
     true
   end
