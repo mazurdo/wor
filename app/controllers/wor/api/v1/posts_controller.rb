@@ -38,6 +38,7 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
 
     attrs_to_update = { title: params[:title], 
                         content: params[:content], 
+                        seo_description: params[:seo_description],
                         user_id: params[:user_id], 
                         publication_date: params[:publication_date], 
                         layout: params[:layout]}
@@ -83,6 +84,7 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
   def create
     @post = Wor::Post.create({title: params[:title], 
                               content: params[:content], 
+                              seo_description: params[:seo_description], 
                               user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
                               date: Time.now,
                               layout: Wor.post_layouts[0]})
