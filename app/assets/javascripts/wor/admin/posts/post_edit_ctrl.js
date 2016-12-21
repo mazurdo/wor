@@ -60,6 +60,7 @@
           text: 'Shortcodes',
           icon: false,
           menu: [
+            {text: 'Bloque modelo', onclick: function() {editor.insertContent('[qm_bloque_modelo modelo="SLUGMODELO"][/qm_bloque_modelo]');}},
             {text: 'Widget modelo', onclick: function() {editor.insertContent('[qm_widget_modelo modelo=SLUGMODELO flotar=derecha]');}},
             {text: 'Enlace grande para ofertas de un modelo', onclick: function() {editor.insertContent('[qm_widget_offerprice_link modelo=SLUGMODELO mensaje_con_precio=no]');}},
             {text: 'Enlace pequeño para ofertas de modelo', onclick: function() {editor.insertContent('[qm_widget_popup_offer_link modelo=SLUGMODELO texto="TEXTO"]');}},
