@@ -33,6 +33,7 @@ module Wor::WorTextsHelper
   end
 
   def convert_to_absolute_paths(content)
+    return '' if content.blank?
     doc = Nokogiri.HTML(content)
 
     if !doc.nil?
