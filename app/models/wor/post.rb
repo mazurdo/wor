@@ -203,6 +203,32 @@ class Wor::Post < ActiveRecord::Base
     end
   end
 
+  def self.find_by_category(category)
+    c = Wor::Classifier.find_by_slug(category)
+    return [] if c.blank?
+
+    c.posts.order("publication_date desc")
+  end
+
+  def self.find_by_category_and_tags(category, tags)
+    category = Wor::Classifier.find_by_slug(category)
+    tags     = Wor::Classifier.tags.where("slug IN (?)", "#{tags}")
+
+    # post_ids to tags
+    post_ids = Wor::Post.select("post_id")
+                .joins(:classifier_posts)
+                .where("classifier_id IN (?)", tags.map(&:id)).map(&:post_id)
+
+    # post_ids to tags and category given
+    post_ids = Wor::ClassifierPost.select("post_id")
+                .where("classifier_id=? and post_id IN (?)", category.id, post_ids)
+                .map(&:post_id)
+
+    return [] if post_ids.nil?
+
+    Wor::Post.where("#{Wor::Post.table_name}.id IN (?)", post_ids).order("publication_date desc")
+  end
+
 
   private
 
