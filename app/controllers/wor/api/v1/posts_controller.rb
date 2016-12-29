@@ -8,15 +8,26 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     @posts = @posts.where("date <= ?", params[:date_end])   if !params[:date_end].blank?
 
     _classifier_ids = []
-    _classifier_ids << params[:category_id] if !params[:category_id].blank?
-    _classifier_ids << params[:tag_id]      if !params[:tag_id].blank?
+    _classifier_count = 0
+
+    if !params[:category_id].blank?
+      _classifier_count += 1
+      _classifier_ids << params[:category_id]
+    end
+
+    if !params[:tag_id].blank?
+      _classifier_count += 1
+      _classifier_ids << params[:tag_id]
+    end
 
     if !params[:category_slug].blank?
+      _classifier_count += 1
       c = Wor::Classifier.categories.find_by_slug(params[:category_slug])
       _classifier_ids << c.id if !c.nil?
     end
 
     if !params[:tag_slug].blank?
+      _classifier_count += 1
       c = Wor::Classifier.tags.find_by_slug(params[:tag_slug])
       _classifier_ids << c.id if !c.nil?
     end
@@ -26,7 +37,7 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
         .joins(:classifier_posts)
         .where("#{Wor::ClassifierPost.table_name}.classifier_id IN (?)", _classifier_ids)
         .group("#{Wor::Post.table_name}.id")
-        .having("count(#{Wor::ClassifierPost.table_name}.id)=?", _classifier_ids.count)
+        .having("count(#{Wor::ClassifierPost.table_name}.id)=?", _classifier_count)
     end
 
     @posts = @posts.order("#{Wor::Post.table_name}.date desc, #{Wor::Post.table_name}.created_at desc")
