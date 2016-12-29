@@ -11,15 +11,30 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     _classifier_ids << params[:category_id] if !params[:category_id].blank?
     _classifier_ids << params[:tag_id]      if !params[:tag_id].blank?
 
-    if _classifier_ids.count > 0
-      @posts = @posts.joins(:classifier_posts).where("#{Wor::ClassifierPost.table_name}.classifier_id IN (?)", _classifier_ids)
+    if !params[:category_slug].blank?
+      c = Wor::Classifier.categories.find_by_slug(params[:category_slug])
+      _classifier_ids << c.id if !c.nil?
     end
 
-    @posts = @posts.order("date desc, created_at desc")
+    if !params[:tag_slug].blank?
+      c = Wor::Classifier.tags.find_by_slug(params[:tag_slug])
+      _classifier_ids << c.id if !c.nil?
+    end
 
-    @pagination = Wor::Pagination.new({current_page: params[:page], total_items: @posts.count})
-    @posts      = @posts.paginate(page: @pagination.current_page, per_page: 20)
+    if _classifier_ids.count > 0
+      @posts = @posts
+        .joins(:classifier_posts)
+        .where("#{Wor::ClassifierPost.table_name}.classifier_id IN (?)", _classifier_ids)
+        .group("#{Wor::Post.table_name}.id")
+        .having("count(#{Wor::ClassifierPost.table_name}.id)=?", _classifier_ids.count)
+    end
+
+    @posts = @posts.order("#{Wor::Post.table_name}.date desc, #{Wor::Post.table_name}.created_at desc")
+
+    @pagination = Wor::Pagination.new({current_page: params[:page]})
+    @posts      = @posts.paginate(page: @pagination.current_page, per_page: 20).all
     @pagination.total_pages           = @posts.total_pages
+    @pagination.total_items           = @posts.total_entries
     @pagination.total_current_items   = @posts.size
     @pagination.per_page              = @posts.per_page
 
@@ -86,8 +101,19 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
                               content: params[:content], 
                               seo_description: params[:seo_description], 
                               user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
-                              date: Time.now,
-                              layout: Wor.post_layouts[0]})
+                              date: params[:date] || Time.now,
+                              layout: Wor.post_layouts[0],
+                              status: params[:status],
+                              publication_date: params[:publication_date]
+                            })
+
+    @post.add_classifier(params[:category_slug], :category) if !params[:category_slug].blank?
+
+    if !params[:tags].nil?
+      params[:tags].each do |tag|
+        @post.add_classifier(tag, :tag)
+      end
+    end
 
     render_message({view: :show})
   end
