@@ -62,20 +62,20 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     @post = Wor::Post.find(params[:id])
     @post.update_slug(params[:slug])
 
-    attrs_to_update = { title: params[:title], 
-                        content: params[:content], 
+    attrs_to_update = { title: params[:title],
+                        content: params[:content],
                         seo_description: params[:seo_description],
-                        user_id: params[:user_id], 
-                        publication_date: params[:publication_date], 
-                        layout: params[:layout]}
+                        user_id: params[:user_id],
+                        publication_date: params[:publication_date],
+                        layout: params[:layout] }
 
-    if params[:status]==Wor::Post::PUBLISHED && !@post.published?
+    if params[:status] == Wor::Post::PUBLISHED && !@post.published?
       attrs_to_update[:disqus_identifier]  = "#{request.base_url}/#{wor_engine.posts_path}?id=#{@post.id}" if @post.disqus_identifier.nil?
       attrs_to_update[:permalink]          = "#{request.base_url}/#{wor_engine.posts_path}?id=#{@post.id}" if @post.permalink.nil?
     end
 
-    if params[:status]==Wor::Post::PUBLISHED || params[:status]==Wor::Post::DRAFT
-      @post.update_attributes({status: params[:status]})
+    if params[:status] == Wor::Post::PUBLISHED || params[:status] == Wor::Post::DRAFT
+      @post.update_attributes(status: params[:status])
     end
 
     if @post.publication_date.blank?
@@ -85,18 +85,15 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     @post.update_attributes(attrs_to_update)
 
     Wor::ClassifierPost.where("post_id=?", @post.id).destroy_all
-    Wor::ClassifierPost.create({post_id: @post.id, classifier_id: params[:category_id]}) if params[:category_id]
+    Wor::ClassifierPost.create(post_id: @post.id, classifier_id: params[:category_id]) if params[:category_id]
 
     if !params[:tags].nil?
       params[:tags].each do |tag_name|
         tag_slug = Wor::Slugs.sanitize(tag_name)
-        tag = Wor::Classifier.find_by_slug(tag_slug)
+        tag = Wor::Classifier.tags.find_by_slug(tag_slug)
+        tag = Wor::Classifier.create(name: tag_name, classifier_type: :tag) unless tag
 
-        if !tag
-          tag = Wor::Classifier.create({name: tag_name, classifier_type: :tag})
-        end
-
-        Wor::ClassifierPost.create({post_id: @post.id, classifier_id: tag.id})
+        Wor::ClassifierPost.create(post_id: @post.id, classifier_id: tag.id)
       end
     end
 
@@ -108,9 +105,9 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
   end
 
   def create
-    @post = Wor::Post.create({title: params[:title], 
-                              content: params[:content], 
-                              seo_description: params[:seo_description], 
+    @post = Wor::Post.create({title: params[:title],
+                              content: params[:content],
+                              seo_description: params[:seo_description],
                               user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
                               date: params[:date] || Time.now,
                               layout: Wor.post_layouts[0],
