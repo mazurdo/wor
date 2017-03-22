@@ -43,7 +43,7 @@
     }
 
     $scope.create = function() {
-      postsFactory.create({}).success(function(response){
+      postsFactory.create({post_type: 'post'}).success(function(response){
         $scope.open_detail(response.data);
       });
     }
@@ -57,7 +57,7 @@
 
     $scope.$on('$destroy', function() {
       reload_posts();
-    });       
+    });
 
     reload_posts =  $scope.$on('WOR-RELOAD_POSTS', function(e, data){
       $scope.filter_table();
