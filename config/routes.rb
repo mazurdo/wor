@@ -33,8 +33,8 @@ Wor::Engine.routes.draw do
   get '/wor/elfinder_manager', to: 'wor/elfinder#index'
   match '/wor/elfinder' => 'wor/elfinder#elfinder', via: [:get, :post]
 
-  root :to => 'home#index'
-  match 'elfinder' => 'home#elfinder'
+  # root :to => 'home#index'
+  get 'elfinder' => 'home#elfinder'
 
   root :to => 'wor/posts#index'
 end

@@ -21,11 +21,11 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.22"
+  s.add_dependency "rails", ">= 3.2.22"
   s.add_dependency "rspec"
   s.add_dependency "rails-settings-cached"
   s.add_dependency "jbuilder"
-  s.add_dependency "will_paginate", "3.0.5"
+  s.add_dependency "will_paginate", ">=3.0.5"
   s.add_dependency "shortcode"
   s.add_dependency "el_finder", "1.1.12"
   s.add_dependency "pundit"

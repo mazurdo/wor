@@ -1,6 +1,6 @@
 class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
   def index
-    @posts = Wor::Post.where(true)
+    @posts = Wor::Post.where('1=1')
     @posts = @posts.where("title like ?", "%#{params[:title]}%")  if !params[:title].blank?
     @posts = @posts.where("user_id=?", params[:user_id])          if !params[:user_id].blank?
     @posts = @posts.where("status=?",  params[:status])           if !params[:status].blank?
