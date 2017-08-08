@@ -1,13 +1,11 @@
 class Wor::Classifier < ActiveRecord::Base
-  attr_accessible :name, :classifier_type, :slug
-
   self.table_name = :wor_classifiers
 
   has_many :classifier_posts
-  has_many :posts, through: :classifier_posts, order: 'publication_date desc'
+  has_many :posts, -> { order('publication_date desc') }, through: :classifier_posts
 
-  scope :categories, conditions: { classifier_type: :category }
-  scope :tags, conditions: { classifier_type: :tag }
+  scope :categories, -> { where(classifier_type: :category) }
+  scope :tags, -> { where(classifier_type: :tag) }
 
   after_create :after_create
 

@@ -1,11 +1,11 @@
 class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
   def index
-    @posts = Wor::Post.where(true)
-    @posts = @posts.where('title like ?', "%#{params[:title]}%") unless params[:title].blank?
-    @posts = @posts.where('user_id=?', params[:user_id]) unless params[:user_id].blank?
-    @posts = @posts.where('status=?',  params[:status]) unless params[:status].blank?
-    @posts = @posts.where('date >= ?', params[:date_begin]) unless params[:date_begin].blank?
-    @posts = @posts.where('date <= ?', params[:date_end]) unless params[:date_end].blank?
+    @posts = Wor::Post.where('1=1')
+    @posts = @posts.where("title like ?", "%#{params[:title]}%") unless params[:title].blank?
+    @posts = @posts.where("user_id=?", params[:user_id]) unless params[:user_id].blank?
+    @posts = @posts.where("status=?",  params[:status]) unless params[:status].blank?
+    @posts = @posts.where("date >= ?", params[:date_begin]) unless params[:date_begin].blank?
+    @posts = @posts.where("date <= ?", params[:date_end]) unless params[:date_end].blank?
 
     _classifier_ids = []
     _classifier_count = 0

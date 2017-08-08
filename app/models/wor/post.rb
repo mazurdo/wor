@@ -1,8 +1,6 @@
 require 'fileutils'
 
 class Wor::Post < ActiveRecord::Base
-  attr_accessible :user_id, :slug, :title, :content, :seo_description, :date, :publication_date, :status, :post_type, :layout, :cover_image_ext, :permalink, :disqus_identifier
-
   table_name =    :wor_posts
 
   has_paper_trail :class_name => 'Wor::Version',
@@ -44,7 +42,7 @@ class Wor::Post < ActiveRecord::Base
     _version = 0
     while Wor::Post.where("id<>? and slug=?", id, slug_sanitize).first
       _version += 1
-      slug_sanitize    = "#{slug_sanitize}-#{_version}" 
+      slug_sanitize    = "#{slug_sanitize}-#{_version}"
     end
 
     self.update_attributes({slug: slug_sanitize})
@@ -158,16 +156,16 @@ class Wor::Post < ActiveRecord::Base
     query   = Wor::Post.select("#{Wor::Post.table_name}.*")
 
     if tag_ids.count>0
-      query = query.select("(SELECT COUNT(`tags`.id) FROM #{Wor::ClassifierPost.table_name} as `tags` 
-                             WHERE `tags`.`classifier_id` IN (#{tag_ids.join(',')}) 
+      query = query.select("(SELECT COUNT(`tags`.id) FROM #{Wor::ClassifierPost.table_name} as `tags`
+                             WHERE `tags`.`classifier_id` IN (#{tag_ids.join(',')})
                              AND `tags`.`post_id` = `qm_wor_posts`.`id`) as tags_count")
       query = query.order("tags_count desc")
     end
 
     query = query.joins(:classifier_posts)
 
-    query = query.where("#{Wor::ClassifierPost.table_name}.classifier_id=? and 
-                         #{Wor::Post.table_name}.id<>? and 
+    query = query.where("#{Wor::ClassifierPost.table_name}.classifier_id=? and
+                         #{Wor::Post.table_name}.id<>? and
                          #{Wor::Post.table_name}.status=?", classifiers.categories.first.id, id, PUBLISHED)
 
     query = query.order("#{Wor::Post.table_name}.created_at desc")
@@ -190,10 +188,10 @@ class Wor::Post < ActiveRecord::Base
       if response["code"]==0
         response["response"].each do |dcomment|
           if !Wor::Comment.sync?(dcomment["id"].to_i)
-            Wor::Comment.create({ post_id: self.id, 
-                                  username: dcomment["author"]["name"], 
-                                  message: dcomment["message"], 
-                                  created_at: dcomment["createdAt"], 
+            Wor::Comment.create({ post_id: self.id,
+                                  username: dcomment["author"]["name"],
+                                  message: dcomment["message"],
+                                  created_at: dcomment["createdAt"],
                                   disqus_object: dcomment.to_s})
           end
         end
@@ -213,6 +211,8 @@ class Wor::Post < ActiveRecord::Base
   def self.find_by_category_and_tags(category, tags)
     category = Wor::Classifier.find_by_slug(category)
     tags     = Wor::Classifier.tags.where("slug IN (?)", "#{tags}")
+
+    return [] if category.nil?
 
     # post_ids to tags
     post_ids = Wor::Post.select("post_id")
@@ -238,7 +238,7 @@ class Wor::Post < ActiveRecord::Base
   end
 
   def hook_after_update
-    self.update_attributes({status: DRAFT})              if self.status.blank?    
+    self.update_attributes({status: DRAFT})              if self.status.blank?
     self.update_attributes({publication_date: Time.now}) if self.published? && self.publication_date.blank?
     self.update_slug(self.title)                         if self.slug.blank? && !self.title.blank?
   end
