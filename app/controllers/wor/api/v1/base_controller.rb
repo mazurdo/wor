@@ -1,15 +1,15 @@
 class Wor::Api::V1::BaseController < Wor::BaseController
-  skip_before_filter :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
-  before_filter :authenticate_user!
-  before_filter :authenticate_wor_admin?
+  before_action :authenticate_user!
+  before_action :authenticate_wor_admin?
 
 
   private
 
   def record_not_found(error)
     render_message({code: :error, messages: [error.message], status: :not_found})
-  end 
+  end
 
   def render_message(opts={})
     options = {code: :success, messages: [], status: 200, view: "/layouts/api/v1/partials/blank"}.merge!(opts)
@@ -26,7 +26,7 @@ class Wor::Api::V1::BaseController < Wor::BaseController
   def authenticate_wor_admin?
     if !wor_current_user.wor_admin?
       render_message({messages: ["Access denied"], code: :error, status: 403})
-    end    
+    end
   end
 
   def user_for_paper_trail
