@@ -1,7 +1,7 @@
 #encoding: UTF-8
 
-xml.instruct! :xml, :version => "1.0" 
-xml.rss :version => "2.0", 
+xml.instruct! :xml, :version => "1.0"
+xml.rss :version => "2.0",
         "xmlns:content"=>"http://purl.org/rss/1.0/modules/content/",
         "xmlns:wfw"=>"http://wellformedweb.org/CommentAPI/",
         "xmlns:dc"=>"http://purl.org/dc/elements/1.1/",
@@ -35,7 +35,7 @@ xml.rss :version => "2.0",
       end
 
       xml.content :encoded do
-        xml.cdata!("<img src=\"#{request.protocol}#{request.host}/#{@post.cover_image_path('1140x600')}\"/>#{convert_to_absolute_paths(@post.content)}")
+        xml.cdata!("<img src=\"#{request.protocol}#{request.host}/#{@post.cover_image_path('1140x600')}?timestamp=#{@post.updated_at.to_i}\"/>#{convert_to_absolute_paths(@post.content)}")
       end
     end
   end
