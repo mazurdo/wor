@@ -17,14 +17,17 @@ class Wor::ElfinderController < ApplicationController
         'application/zip' => ['unzip', '-qq', '-o'],
         'application/x-gzip' => ['tar', '-xzf'],
       },
-      :archivers => { 
+      :archivers => {
         'application/zip' => ['.zip', 'zip', '-qr9'],
         'application/x-gzip' => ['.tgz', 'tar', '-czf'],
       },
-      :thumbs => true
+      :thumbs => true,
+      :debug => true
     ).run(params)
 
     headers.merge!(h)
-    render (r.empty? ? {:nothing => true} : {:text => r.to_json}), :layout => false
+    render plain: r.to_json
+
+    # render (r.empty? ? {:nothing => true} : {:text => r.to_json}), :layout => false
   end
 end
