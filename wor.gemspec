@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency "el_finder", "1.1.12"
   s.add_dependency "pundit"
   s.add_dependency "paper_trail"
-  s.add_dependency "disqus_api"
+  s.add_dependency "disqus_api", "0.0.8"
   s.add_dependency "tinymce-rails"
   s.add_dependency "rmagick"
 
