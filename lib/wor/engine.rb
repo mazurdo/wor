@@ -18,7 +18,7 @@ module Wor
 
     initializer :assets do |app|
       app.config.assets.precompile += ["wor/admin/admin.css", "wor/admin/admin.js"]
-      app.config.assets.precompile += ["wor/elfinder.css", "wor/elfinder.js"]
+      app.config.assets.precompile += ["wor/elfinder/elfinder.css", "wor/elfinder.js"]
       app.config.assets.precompile += ["tinymce/skins/lightgray/content.min.css"]
       app.config.assets.precompile += ["wor/*.png", "wor/*.giff"]
     end
