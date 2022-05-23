@@ -72,10 +72,10 @@ class Wor::Post < ActiveRecord::Base
     return false if !File.exists?(File.join(path))
 
     Rails.logger.warn "before mkdir: #{path}/#{id}"
-    Dir.mkdir "#{path}/#{id}" if !File.exists?(File.join(path, id.to_s))
+    FileUtils.mkdir_p "#{path}/thumbnails/#{id}" if !File.exists?(File.join(path, 'thumbnails', id.to_s))
 
     image_original_path = "#{path}/#{image}"
-    image_resized_path  = "#{path}/#{id}/#{size}_#{image}"
+    image_resized_path  = "#{path}/thumbnails/#{id}/#{size}_#{image}"
 
     width  = size.split('x')[0]
     height = size.split('x')[1]
@@ -96,11 +96,11 @@ class Wor::Post < ActiveRecord::Base
     if cover_image?
       if size.nil?
         "wor/cover_images/#{cover_image_name}"
-      elsif File.exists?("#{PATH_COVER_IMAGE}/#{id}/#{size}_#{cover_image_name}")
-        "wor/cover_images/#{id}/#{size}_#{cover_image_name}"
+      elsif File.exists?("#{PATH_COVER_IMAGE}/thumbnails/#{id}/#{size}_#{cover_image_name}")
+        "wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
       else
-        Rails.logger.warn "before resize call: wor/cover_images/#{id}/#{size}_#{cover_image_name}"
-        "wor/cover_images/#{id}/#{size}_#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
+        Rails.logger.warn "before resize call: wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
+        "wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
       end
     end
   end
@@ -121,7 +121,7 @@ class Wor::Post < ActiveRecord::Base
           img_src.gsub!(image_name, '')
 
           if resize(File.join(Rails.public_path, image_path), image_name, size)
-            img.attributes['src'].value = "#{img_src}#{id}/#{size}_#{image_name}"
+            img.attributes['src'].value = "#{img_src}thumbnails/#{id}/#{size}_#{image_name}"
           end
         end
       end
@@ -228,7 +228,6 @@ class Wor::Post < ActiveRecord::Base
 
     Wor::Post.where("#{Wor::Post.table_name}.id IN (?)", post_ids).order("publication_date desc")
   end
-
 
   private
 
