@@ -19,20 +19,21 @@ module Wor
     end
 
     initializer "disqus_config" do |app|
-      DisqusApi.config = {api_secret:   Wor.disqus_api_secret,
-                          api_key:      Wor.disqus_api_key,
-                          access_token: Wor.disqus_access_token}
+      DisqusApi.config = {api_secret:   Wor::Engine.disqus_api_secret,
+                          api_key:      Wor::Engine.disqus_api_key,
+                          access_token: Wor::Engine.disqus_access_token}
     end
 
     initializer :assets do |app|
       app.config.assets.precompile += ["wor/admin/admin.css", "wor/admin/admin.js"]
-      app.config.assets.precompile += ["wor/elfinder/elfinder.css", "wor/elfinder.js"]
+      app.config.assets.precompile += ["wor/elfinder.css", "wor/elfinder.js"]
       app.config.assets.precompile += ["tinymce/skins/lightgray/content.min.css"]
       app.config.assets.precompile += ["wor/*.png", "wor/*.giff"]
     end
-  end
 
-  def self.setup(&block)
-    yield self
+    # Move setup method here
+    def self.setup(&block)
+      yield self
+    end
   end
 end
