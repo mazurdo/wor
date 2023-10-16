@@ -79,7 +79,7 @@ namespace :wor do
                                 disqus_identifier: "#{post[0]} #{post[7]}"})
 
       if _post.published?
-        _post.update_attributes({publication_date: _post.date})
+        _post.update({publication_date: _post.date})
       end
 
       if !post_categories[index].blank?
@@ -95,7 +95,7 @@ namespace :wor do
       # Import comments from Disqus
       if _post.published?
         begin
-          response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{_post.disqus_identifier}", forum: Wor.disqus_forum)
+          response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{_post.disqus_identifier}", forum: Wor::Engine.disqus_forum)
           if response["code"]==0
             response["response"].each do |dcomment|
               Wor::Comment.create({post_id: _post.id, username: dcomment["author"]["name"], message: dcomment["message"], created_at: dcomment["createdAt"], disqus_object: dcomment.to_s})
@@ -168,7 +168,7 @@ namespace :wor do
 
           img.attributes['src'].value = img_src
         end
-        post.update_attributes({content: doc.at("body").inner_html})
+        post.update({content: doc.at("body").inner_html})
       end
     end
   end

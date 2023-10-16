@@ -75,14 +75,14 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
     end
 
     if params[:status] == Wor::Post::PUBLISHED || params[:status] == Wor::Post::DRAFT
-      @post.update_attributes(status: params[:status])
+      @post.update(status: params[:status])
     end
 
     if @post.publication_date.blank?
       attrs_to_update[:date] = Time.now
     end
 
-    @post.update_attributes(attrs_to_update)
+    @post.update(attrs_to_update)
 
     Wor::ClassifierPost.where("post_id=?", @post.id).destroy_all
     Wor::ClassifierPost.create(post_id: @post.id, classifier_id: params[:category_id]) if params[:category_id]
@@ -111,7 +111,7 @@ class Wor::Api::V1::PostsController < Wor::Api::V1::BaseController
       seo_description: params[:seo_description],
       user_id: (wor_current_user.nil? ? nil : wor_current_user.id),
       date: params[:date] || Time.now,
-      layout: Wor.post_layouts[0],
+      layout: Wor::Engine.post_layouts[0],
       status: params[:status],
       publication_date: params[:publication_date],
       post_type: params[:post_type]

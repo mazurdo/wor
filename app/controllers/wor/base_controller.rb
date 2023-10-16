@@ -1,5 +1,5 @@
 class Wor::BaseController < ApplicationController
-  include Pundit
+  include Pundit::Authorization
   protect_from_forgery
 
   helper Wor::PathsHelper
@@ -15,7 +15,7 @@ class Wor::BaseController < ApplicationController
   end
 
   def wor_current_user
-    send(Wor.current_user_method) if Wor.current_user_method
+    send(Wor::Engine.current_user_method) if Wor::Engine.current_user_method
   end
   helper_method :wor_current_user
 

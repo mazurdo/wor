@@ -18,7 +18,7 @@ class Wor::Classifier < ActiveRecord::Base
       slug_sanitize = "#{slug_sanitize}-#{_version}"
     end
 
-    update_attributes(slug: slug_sanitize)
+    update(slug: slug_sanitize)
   end
 
   private

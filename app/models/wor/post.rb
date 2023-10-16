@@ -45,7 +45,7 @@ class Wor::Post < ActiveRecord::Base
       slug_sanitize    = "#{slug_sanitize}-#{_version}"
     end
 
-    self.update_attributes({slug: slug_sanitize})
+    self.update({slug: slug_sanitize})
   end
 
   def published?
@@ -139,7 +139,7 @@ class Wor::Post < ActiveRecord::Base
       _file.write(file.read)
     end
 
-    update_attributes({cover_image_ext: extension})
+    update({cover_image_ext: extension})
   end
 
   def remove_cover_image
@@ -184,7 +184,7 @@ class Wor::Post < ActiveRecord::Base
 
   def sync_disqus
     begin
-      response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{self.disqus_identifier}", forum: Wor.disqus_forum)
+      response = DisqusApi.v3.get("threads/listPosts.json?thread=ident:#{self.disqus_identifier}", forum: Wor::Engine.disqus_forum)
       if response["code"]==0
         response["response"].each do |dcomment|
           if !Wor::Comment.sync?(dcomment["id"].to_i)
@@ -233,12 +233,12 @@ class Wor::Post < ActiveRecord::Base
 
   def hook_after_create
     self.update_slug(self.title)            if self.slug.blank? && !self.title.blank?
-    self.update_attributes({status: DRAFT}) if self.status.blank?
+    self.update({status: DRAFT}) if self.status.blank?
   end
 
   def hook_after_update
-    self.update_attributes({status: DRAFT})              if self.status.blank?
-    self.update_attributes({publication_date: Time.now}) if self.published? && self.publication_date.blank?
+    self.update({status: DRAFT})              if self.status.blank?
+    self.update({publication_date: Time.now}) if self.published? && self.publication_date.blank?
     self.update_slug(self.title)                         if self.slug.blank? && !self.title.blank?
   end
 
