@@ -66,12 +66,9 @@ class Wor::Post < ActiveRecord::Base
 
   # TODO, Move to module
   def resize(path, image, size)
-    Rails.logger.warn "resize method"
     return false if size.split('x').count!=2
-    Rails.logger.warn "before File.exists? check: #{size.split('x').count}"
     return false if !File.exist?(File.join(path))
 
-    Rails.logger.warn "before mkdir: #{path}/#{id}"
     FileUtils.mkdir_p "#{path}/thumbnails/#{id}" if !File.exist?(File.join(path, 'thumbnails', id.to_s))
 
     image_original_path = "#{path}/#{image}"
@@ -80,10 +77,9 @@ class Wor::Post < ActiveRecord::Base
     width  = size.split('x')[0]
     height = size.split('x')[1]
 
-    Rails.logger.warn "Magick::Image.read(#{image_original_path})"
     begin
       i = Magick::Image.read(image_original_path).first
-      Rails.logger.warn "before i.resize_to_fit"
+
       i.resize_to_fit(width.to_i,height.to_i).write(image_resized_path)
     rescue Exception => e
       Rails.logger.error e
@@ -99,7 +95,6 @@ class Wor::Post < ActiveRecord::Base
       elsif File.exist?("#{PATH_COVER_IMAGE}/thumbnails/#{id}/#{size}_#{cover_image_name}")
         "wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
       else
-        Rails.logger.warn "before resize call: wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
         "wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}" if resize(PATH_COVER_IMAGE, cover_image_name, size)
       end
     end
