@@ -57,7 +57,7 @@ class Wor::Post < ActiveRecord::Base
   end
 
   def cover_image?
-    File.exists?("#{PATH_COVER_IMAGE}/#{cover_image_name}")
+    File.exist?("#{PATH_COVER_IMAGE}/#{cover_image_name}")
   end
 
   def cover_image_name
@@ -69,10 +69,10 @@ class Wor::Post < ActiveRecord::Base
     Rails.logger.warn "resize method"
     return false if size.split('x').count!=2
     Rails.logger.warn "before File.exists? check: #{size.split('x').count}"
-    return false if !File.exists?(File.join(path))
+    return false if !File.exist?(File.join(path))
 
     Rails.logger.warn "before mkdir: #{path}/#{id}"
-    FileUtils.mkdir_p "#{path}/thumbnails/#{id}" if !File.exists?(File.join(path, 'thumbnails', id.to_s))
+    FileUtils.mkdir_p "#{path}/thumbnails/#{id}" if !File.exist?(File.join(path, 'thumbnails', id.to_s))
 
     image_original_path = "#{path}/#{image}"
     image_resized_path  = "#{path}/thumbnails/#{id}/#{size}_#{image}"
@@ -96,7 +96,7 @@ class Wor::Post < ActiveRecord::Base
     if cover_image?
       if size.nil?
         "wor/cover_images/#{cover_image_name}"
-      elsif File.exists?("#{PATH_COVER_IMAGE}/thumbnails/#{id}/#{size}_#{cover_image_name}")
+      elsif File.exist?("#{PATH_COVER_IMAGE}/thumbnails/#{id}/#{size}_#{cover_image_name}")
         "wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
       else
         Rails.logger.warn "before resize call: wor/cover_images/thumbnails/#{id}/#{size}_#{cover_image_name}"
