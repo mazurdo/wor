@@ -33,7 +33,7 @@ module Wor
     # def remove_file
     #   if !extension.blank?
     #     file_path = "#{PATH}#{id}.#{extension}"
-    #     File.delete(file_path) if File.exists?(file_path)
+    #     File.delete(file_path) if File.exist?(file_path)
     #   end
     # end
   end
