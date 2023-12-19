@@ -101,19 +101,26 @@ class Wor::Post < ActiveRecord::Base
   end
 
   # TODO Move to module/helper
-  def content_preprocess(size=nil)
+  def image_uri(img_src)
+    return URI.parse(URI.escape(img_src)) if RUBY_VERSION[0].to_i < 3
+
+    # Use URI::Parser when moving to Ruby 3, as URI.escape is deprecated
+    URI.parse(URI::Parser.new.escape(img_src))
+  end
+
+  def content_preprocess(size = nil)
     return content if size.nil? || content.blank?
 
     doc = Nokogiri.HTML(content)
 
-    if !doc.nil?
+    if doc.present?
       doc.search('img').each do |img|
-        img_src  = img.attributes['src'].value
+        img_src = img.attributes['src'].value
         image_name = img_src.split('/').last
 
-        if !URI.parse(img_src).path.nil?
-          image_path = URI.parse(img_src).path.gsub!(image_name, '')
-          img_src.gsub!(image_name, '')
+        if !image_uri(img_src).path.nil?
+          image_path = image_uri(img_src).path.gsub(image_name, '')
+          img_src = img_src.gsub(image_name, '')
 
           if resize(File.join(Rails.public_path, image_path), image_name, size)
             img.attributes['src'].value = "#{img_src}thumbnails/#{id}/#{size}_#{image_name}"
